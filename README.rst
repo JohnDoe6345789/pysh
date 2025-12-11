@@ -21,30 +21,24 @@ Installation
 
 1. Clone the repository and install dependencies with Poetry:
 
-   ```bash
+   .. code-block:: bash
 
-   $ git clone https://github.com/aspyct/pysh.git
-   $ cd pysh
-   $ poetry install
-
-   ```
+      $ git clone https://github.com/aspyct/pysh.git
+      $ cd pysh
+      $ poetry install
 
 2. Run the shell from this checkout:
 
-   ```bash
-   
-   $ poetry run pysh
-   
-   ```
+   .. code-block:: bash
+
+      $ poetry run pysh
 
 3. To build and install a wheel for wider use:
 
-   ```bash
-   
-   $ poetry build
-   $ pip install dist/*.whl
-   
-   ```
+   .. code-block:: bash
+
+      $ poetry build
+      $ pip install dist/*.whl
 
 Once installed, `pysh` is available as a runnable script and can be set as the shell in your terminal emulator just like any other shell.
 
@@ -53,16 +47,16 @@ Usage
 
 After launching PySH you can interleave Python and shell commands:
 
-```
-> print("Hello")
-> if True:
-.    print("pysh looks terrific!")
+.. code-block:: bash
 
-> ls
-> vi README.rst
-> myvar = `ls`
-> print(myvar)
-```
+   > print("Hello")
+   > if True:
+.      print("pysh looks terrific!")
+
+   > ls
+   > vi README.rst
+   > myvar = `ls`
+   > print(myvar)
 
 Shell commands behave the same as in Bash, and Python statements keep their usual semantics. Autocompletion with Tab works for both languages.
 
@@ -81,11 +75,9 @@ Development
 
 Run tests with:
 
-```bash
+.. code-block:: bash
 
-$ poetry run pytest
-
-```
+   $ poetry run pytest
 
 Contributions are welcome: fork the repo, add a test, and send a pull request.
 
