@@ -21,23 +21,23 @@ Installation
 
 1. Clone the repository and install dependencies with Poetry:
 
-   ```
-   git clone https://github.com/aspyct/pysh.git
-   cd pysh
-   poetry install
+   ```bash
+   $ git clone https://github.com/aspyct/pysh.git
+   $ cd pysh
+   $ poetry install
    ```
 
 2. Run the shell from this checkout:
 
-   ```
-   poetry run pysh
+   ```bash
+   $ poetry run pysh
    ```
 
 3. To build and install a wheel for wider use:
 
-   ```
-   poetry build
-   pip install dist/*.whl
+   ```bash
+   $ poetry build
+   $ pip install dist/*.whl
    ```
 
 Once installed, `pysh` is available as a runnable script and can be set as the shell in your terminal emulator just like any other shell.
@@ -75,8 +75,8 @@ Development
 
 Run tests with:
 
-```
-poetry run pytest
+```bash
+$ poetry run pytest
 ```
 
 Contributions are welcome: fork the repo, add a test, and send a pull request.
