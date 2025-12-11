@@ -48,9 +48,14 @@ You can also mix python and shell::
 
   > if True:
   .    ls
-  .
+  . 
   > myvar = `ls`
   > print(myvar)
+
+Prompt styling
+==============
+
+PySH now renders an Ubuntu-style prompt every time you run it interactively. The username and host appear in bold green, the current directory in bold blue, and the prompt mimics bash with a trailing `$`, so you get the same `r@formatme:/var/log$` look and feel (along with automatic updates after `cd`). This keeps the experience visually consistent with a real bash session.
 
 Internals
 =========

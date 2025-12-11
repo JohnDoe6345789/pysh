@@ -29,10 +29,15 @@ import subprocess
 import keyword
 import glob
 import pydoc
+import getpass
+import socket
 
 from pysh.meta import __version__, __author__
 
 PYSHRC = os.path.expanduser("~/.pyshrc")
+ANSI_BOLD_GREEN = "\033[1;32m"
+ANSI_BOLD_BLUE = "\033[1;34m"
+ANSI_RESET = "\033[0m"
 
 class PySHUtils(object):
 	def __init__(self, path):
@@ -261,6 +266,10 @@ class PySH(code.InteractiveConsole):
 	def __init__(self, path=""):
 		self.paths = path.split(":")
 		self.util = PySHUtils(self.paths)
+		self.user = getpass.getuser()
+		self.host = socket.gethostname().split(".", 1)[0]
+		self._primary_prompt_token = "<pysh_primary_prompt>"
+		self._secondary_prompt_token = "<pysh_secondary_prompt>"
 		self.super.__init__({
 			'__pysh__' : self.util,
 			'pyhelp'   : pydoc.help
@@ -310,8 +319,17 @@ class PySH(code.InteractiveConsole):
 		return self.super.push(line)
 	
 	def interact(self):
-		self.super.interact(self.banner)
-	
+		previous_ps1 = getattr(sys, "ps1", ">>> ")
+		previous_ps2 = getattr(sys, "ps2", "... ")
+		sys.ps1 = self._primary_prompt_token
+		sys.ps2 = self._secondary_prompt_token
+
+		try:
+			self.super.interact(self.banner)
+		finally:
+			sys.ps1 = previous_ps1
+			sys.ps2 = previous_ps2
+
 	def translate(self, shelements):
 		return "(__pysh__.shrun(" + repr(self.inlineVars(shelements)) + "))"
 	
@@ -338,6 +356,34 @@ class PySH(code.InteractiveConsole):
 	def processCommand(self, shelements):
 		shelements = self.inlineVars(shelements)
 		return "(__pysh__.cmd_" + shelements[0] + "(" + repr(shelements[1:]) + "))"
+
+	def raw_input(self, prompt=""):
+		if prompt == self._primary_prompt_token:
+			prompt = self.build_prompt()
+		elif prompt == self._secondary_prompt_token:
+			prompt = self.build_secondary_prompt()
+
+		return self.super.raw_input(prompt)
+
+	def build_prompt(self):
+		cwd = self.format_cwd()
+		return f"{ANSI_BOLD_GREEN}{self.user}@{self.host}{ANSI_RESET}:{ANSI_BOLD_BLUE}{cwd}{ANSI_RESET}$ "
+
+	def build_secondary_prompt(self):
+		return f"{ANSI_BOLD_GREEN}> {ANSI_RESET}"
+
+	def format_cwd(self):
+		cwd = os.getcwd()
+		home = os.path.expanduser("~")
+
+		if cwd == home:
+			display = "~"
+		elif cwd.startswith(home + os.sep):
+			display = "~" + cwd[len(home):]
+		else:
+			display = cwd
+
+		return display.replace("\\", "/")
 	
 	@property
 	def super(self):
