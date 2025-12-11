@@ -1,65 +1,87 @@
-pysh
-####
+PySH
+====
 
-pysh is a Shell that mixes Python and Bash syntax.
+PySH is a lightweight shell that lets you mix Python expressions and statements with traditional shell commands. It is powered by the standard Python `code` module and intercepts each line to automatically decide whether you meant to run Python or execute a system command.
+
+Features
+--------
+
+- Write Python code and run shell commands without switching contexts.
+- Prompt updates automatically after `cd` and matches the familiar Bash look.
+- Access the special `__pysh__` helper when you need to interact directly with the shell layer.
 
 Requirements
-============
+------------
 
-pysh requires only Python3 to run, and should work on Linux and OSX platforms (and probably other UNIX environments).
+- Python 3.6 or newer.
+- A UNIX-like platform (Linux, macOS, WSL, etc.).
 
-Installing
-==========
+Installation
+------------
 
-Poetry is used to build and publish PySH. If you already have Poetry installed,
-run:
+1. Clone the repository and install dependencies with Poetry:
 
-  poetry install
+   ```
+   git clone https://github.com/aspyct/pysh.git
+   cd pysh
+   poetry install
+   ```
 
-You can then start the shell with `poetry run pysh`, or build/install the wheel
-with `poetry build && pip install dist/*.whl`. Jump to "Discover it" if you just
-want to run the version in this repository without installing.
+2. Run the shell from this checkout:
 
-! Important ! PySH is still beta software, and you should not use it for your everyday work unless your know what you are doing.
-If, like me, you want to use PySH as default shell, the best option is to set it only in your terminal emulator (gnome-terminal, Apple terminal app...) via the preferences of the application.
+   ```
+   poetry run pysh
+   ```
 
-Discover it
-===========
+3. To build and install a wheel for wider use:
 
-It's really easy to get started. All you need is Python3. Download the zip file, unzip it on the destination of your choice, chmod the `pysh` file and execute it. ::
+   ```
+   poetry build
+   pip install dist/*.whl
+   ```
 
-  unzip aspyct-pysh-xxxx.zip -d aspyct-pysh
-  cd aspyct-pysh
-  chmod +x bin/pysh
-  ./bin/pysh
+Once installed, `pysh` is available as a runnable script and can be set as the shell in your terminal emulator just like any other shell.
 
-You are now in what looks like a regular python interpreter. Try to write some python::
+Usage
+-----
 
-  > print("Hello")
-  > if True:
-  .    print("pysh looks terrific ! :)")
+After launching PySH you can interleave Python and shell commands:
 
-Shell commands also work, as well as autocompletion with tab::
+```
+> print("Hello")
+> if True:
+.    print("pysh looks terrific!")
 
-  > ls
-  > vi <yourfile>
+> ls
+> vi README.rst
+> myvar = `ls`
+> print(myvar)
+```
 
-You can also mix python and shell::
-
-  > if True:
-  .    ls
-  . 
-  > myvar = `ls`
-  > print(myvar)
+Shell commands behave the same as in Bash, and Python statements keep their usual semantics. Autocompletion with Tab works for both languages.
 
 Prompt styling
-==============
+--------------
 
-PySH now renders an Ubuntu-style prompt every time you run it interactively. The username and host appear in bold green, the current directory in bold blue, and the prompt mimics bash with a trailing `$`, so you get the same `r@formatme:/var/log$` look and feel (along with automatic updates after `cd`). This keeps the experience visually consistent with a real bash session.
+PySH renders an Ubuntu-inspired prompt: the username and host are bold green, the current directory is bold blue, and the ending `$` mirrors Bash. The prompt updates automatically after commands such as `cd`.
 
 Internals
-=========
+---------
 
-pysh uses the built-in *code* module to emulate the python interpreter, and tries to detect whether a line is a shell command or regular python code. Every line is translated before it is fed to the interpreter.
+Under the hood, PySH uses `code.InteractiveConsole` to simulate the interpreter loop. Each line is inspected to decide whether it is a shell request, and the `__pysh__` helper exposes lower-level hooks into that detection logic.
 
-In the pysh shell, there is a special variable named `__pysh__` that is used to make shell commands happen. You may use this class directly, but it will probably not make your code cleaner.
+Development
+-----------
+
+Run tests with:
+
+```
+poetry run pytest
+```
+
+Contributions are welcome: fork the repo, add a test, and send a pull request.
+
+License
+-------
+
+MIT. See the `LICENSE` file for details.
